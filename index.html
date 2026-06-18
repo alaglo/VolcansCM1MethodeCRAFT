@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Séance Volcans — CM2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --lava:#D84020;--lava2:#F0920A;--sky:#1A6EC8;--teal:#0E8A6A;
+  --purple:#6D28D9;--amber:#B45309;--green:#166534;
+  --lava-lt:#FFF0EA;--sky-lt:#EBF4FF;--teal-lt:#E4F8F2;
+  --purple-lt:#F3EFFE;--amber-lt:#FFFBEB;--green-lt:#F0FDF4;
+  --bg:#FFF8F2;--card:#fff;--border:#E8D5C0;--text:#1C0A00;--muted:#7A5030;
+  --r:14px;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.app{max-width:860px;margin:0 auto;padding-bottom:40px;}
+.hero{background:var(--lava);padding:20px 20px 24px;text-align:center;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:18px;background:var(--bg);border-radius:50% 50% 0 0/100%;}
+.hero h1{font-size:1.7rem;font-weight:900;color:#fff;}
+.hero p{font-size:0.82rem;color:rgba(255,255,255,0.82);margin-top:5px;}
+.dots{display:flex;justify-content:center;gap:7px;margin-top:12px;}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.3);transition:background 0.3s;}
+.dot.on{background:#fff;}
+.nav{display:flex;gap:6px;padding:16px 14px 0;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap;}
+.nav::-webkit-scrollbar{display:none;}
+.tab{display:flex;align-items:center;gap:5px;padding:9px 14px;border-radius:99px;font-size:0.8rem;font-weight:700;cursor:pointer;background:transparent;color:var(--muted);border:2px solid transparent;white-space:nowrap;font-family:'Nunito',sans-serif;transition:all 0.15s;}
+.tab:hover{background:#F5E8DA;color:var(--lava);}
+.tab.on{background:var(--lava);color:#fff;}
+.panel{display:none;padding:18px 14px;}
+.panel.on{display:block;}
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:0.68rem;font-weight:700;}
+
+.tl{position:relative;padding-left:42px;}
+.tl::before{content:'';position:absolute;left:19px;top:0;bottom:0;width:3px;background:var(--border);border-radius:99px;}
+.tl-item{position:relative;margin-bottom:12px;}
+.tl-item::before{content:'';position:absolute;left:-27px;top:13px;width:16px;height:16px;border-radius:50%;background:var(--lava);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--lava);}
+.tl-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.tl-head{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;user-select:none;}
+.tl-time{padding:3px 10px;border-radius:99px;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;}
+.tl-title{font-size:0.88rem;font-weight:800;flex:1;}
+.tl-toggle{font-size:0.75rem;color:var(--muted);flex-shrink:0;transition:transform 0.2s;}
+.tl-body{padding:13px 15px;border-top:1.5px solid var(--border);display:none;}
+.tl-body.open{display:block;}
+.tl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px;}
+.tl-col{border-radius:10px;padding:11px 12px;}
+.tl-col-title{font-size:0.71rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;}
+.tl-col ul{padding-left:15px;font-size:0.8rem;line-height:1.8;color:#4A3020;}
+
+.volcan-wrap{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;}
+.lbox{background:#FFF8F0;border:2px solid var(--border);border-radius:var(--r);padding:13px;min-height:76px;margin-bottom:10px;transition:all 0.2s;}
+.lbox h3{font-size:0.87rem;font-weight:800;margin-bottom:5px;}
+.lbox p{font-size:0.8rem;line-height:1.67;color:var(--muted);}
+.leg-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.leg-btn{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;background:#FFF3E6;border:1.5px solid var(--border);cursor:pointer;font-size:0.77rem;font-weight:700;font-family:'Nunito',sans-serif;transition:all 0.12s;}
+.leg-btn:hover{border-color:var(--lava);}
+.ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
+.comp-card{border-radius:var(--r);padding:15px;border:2px solid transparent;}
+.comp-card.eff{background:#E4F8F2;border-color:#0E8A6A;}
+.comp-card.exp{background:#FFF0EA;border-color:#D84020;}
+.comp-ico{font-size:3rem;text-align:center;display:block;margin-bottom:9px;}
+.comp-title{font-size:0.97rem;font-weight:900;text-align:center;margin-bottom:10px;}
+.comp-card.eff .comp-title{color:#085041;}
+.comp-card.exp .comp-title{color:#7F1D1D;}
+.comp-list{font-size:0.81rem;line-height:1.85;padding-left:15px;color:#2C1A08;}
+
+.dang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:6px;}
+.dang-card{border-radius:var(--r);padding:13px;text-align:center;border:1.5px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.dang-card:hover{transform:translateY(-2px);border-width:2px;}
+.dang-ico{font-size:2.3rem;display:block;margin-bottom:6px;}
+.dang-name{font-size:0.84rem;font-weight:800;margin-bottom:4px;}
+.dang-desc{font-size:0.75rem;line-height:1.55;color:var(--muted);}
+
+.qbar-wrap{background:#E8D5C0;border-radius:99px;height:11px;margin-bottom:16px;overflow:hidden;}
+.qbar{height:100%;background:var(--lava);border-radius:99px;transition:width 0.4s;}
+.qcard{background:var(--card);border:2px solid var(--border);border-radius:var(--r);padding:20px;}
+.qq{font-size:0.96rem;font-weight:800;line-height:1.52;margin-bottom:14px;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{padding:12px 15px;border:2px solid var(--border);border-radius:var(--r);text-align:left;cursor:pointer;background:#FFFAF5;color:var(--text);font-size:0.86rem;font-weight:600;font-family:'Nunito',sans-serif;transition:all 0.15s;}
+.opt:hover:not(:disabled){border-color:var(--lava2);background:#FFF3E0;}
+.opt.correct{background:#F0FDF4;border-color:#16A34A;color:#14532D;}
+.opt.wrong{background:#FFF5F5;border-color:var(--lava);color:#7F1D1D;}
+.fb{margin-top:12px;padding:12px 14px;border-radius:var(--r);font-size:0.83rem;line-height:1.67;display:none;}
+.fb.show{display:block;}
+.fb.good{background:#F0FDF4;border:1.5px solid #16A34A;color:#14532D;}
+.fb.bad{background:#FFF5F5;border:1.5px solid var(--lava);color:#7F1D1D;}
+.qnav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
+.nbtn{padding:9px 22px;border:2px solid var(--lava);border-radius:99px;cursor:pointer;background:var(--lava);color:#fff;font-size:0.84rem;font-weight:700;font-family:'Nunito',sans-serif;}
+.nbtn:hover{background:#B83010;}
+.qsc{font-size:0.8rem;color:var(--muted);font-weight:600;}
+.final{text-align:center;padding:30px 0;}
+.final-num{font-size:4rem;font-weight:900;color:var(--lava);}
+.final-stars{font-size:1.9rem;margin:8px 0;}
+.final-msg{font-size:0.9rem;color:var(--muted);font-weight:600;}
+.rbtn{margin-top:18px;padding:11px 28px;border:2px solid var(--lava);border-radius:99px;cursor:pointer;background:#fff;color:var(--lava);font-size:0.9rem;font-weight:700;font-family:'Nunito',sans-serif;}
+
+.trace-card{background:#FFFCF8;border:1.5px solid var(--border);border-radius:var(--r);padding:18px;}
+.trace-title{font-size:1.05rem;font-weight:900;text-align:center;color:var(--lava);border-bottom:2px solid var(--lava);padding-bottom:9px;margin-bottom:15px;}
+.trace-h{font-size:0.9rem;font-weight:800;color:var(--sky);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.trace-section{margin-bottom:15px;}
+.trace-body{font-size:0.84rem;line-height:1.82;color:#2C1A08;}
+.hl{color:var(--lava);font-weight:700;}
+.retenir{background:#E4F8F2;border-left:4px solid var(--teal);padding:11px 15px;border-radius:0 10px 10px 0;font-size:0.83rem;line-height:1.72;color:#085041;margin-top:13px;}
+.eval-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:13px;}
+.eval-card{border-radius:var(--r);padding:13px;text-align:center;border:2px solid transparent;}
+.ec-tbm{background:#F0FDF4;border-color:#16A34A;color:#14532D;}
+.ec-s{background:#EBF4FF;border-color:#1A6EC8;color:#0C447C;}
+.ec-pa{background:#FFFBEB;border-color:#B45309;color:#854F0B;}
+.ec-na{background:#FFF5F5;border-color:#D84020;color:#7F1D1D;}
+.crit-item{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;background:#FFF8F0;border-radius:9px;margin-bottom:7px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hero">
+  <div class="dots" id="dotsEl"></div>
+  <h1>Séance : Les volcans</h1>
+  <p>CM2 &middot; 22 élèves &middot; 45 minutes &middot; Sciences &amp; Géographie</p>
+</div>
+
+<div class="nav">
+  <button class="tab on" onclick="go('plan',this)">⏱ Plan de séance</button>
+  <button class="tab" onclick="go('volcan',this)">🏔 Anatomie</button>
+  <button class="tab" onclick="go('types',this)">🌋 Types d'éruptions</button>
+  <button class="tab" onclick="go('dangers',this)">⚠ Dangers</button>
+  <button class="tab" onclick="go('trace',this)">📝 Trace écrite</button>
+  <button class="tab" onclick="go('eval',this)">⭐ Évaluation</button>
+  <button class="tab" onclick="go('quiz',this)">🧠 Quiz</button>
+</div>
+
+<!-- ══ PLAN ══ -->
+<div id="tab-plan" class="panel on">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin-bottom:16px;">
+    <div class="card" style="text-align:center;padding:12px;background:#FFF0EA;border-color:#D84020;"><div style="font-size:1.7rem">👥</div><div style="font-size:1.3rem;font-weight:900;color:#D84020;">22</div><div style="font-size:0.72rem;color:#7F1D1D;font-weight:600;">élèves</div></div>
+    <div class="card" style="text-align:center;padding:12px;background:#EBF4FF;border-color:#1A6EC8;"><div style="font-size:1.7rem">⏱</div><div style="font-size:1.3rem;font-weight:900;color:#1A6EC8;">45 min</div><div style="font-size:0.72rem;color:#0C447C;font-weight:600;">6 phases</div></div>
+    <div class="card" style="text-align:center;padding:12px;background:#F0FDF4;border-color:#166534;"><div style="font-size:1.7rem">🎯</div><div style="font-size:1.3rem;font-weight:900;color:#166534;">4</div><div style="font-size:0.72rem;color:#14532D;font-weight:600;">objectifs</div></div>
+    <div class="card" style="text-align:center;padding:12px;background:#F3EFFE;border-color:#6D28D9;"><div style="font-size:1.7rem">🗂</div><div style="font-size:1.3rem;font-weight:900;color:#6D28D9;">4</div><div style="font-size:0.72rem;color:#4C1D95;font-weight:600;">groupes</div></div>
+  </div>
+
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="tl-head" onclick="tog(this)">
+          <span class="tl-time" style="background:#D84020">0–5 min</span>
+          <span class="tl-title">🎬 Accroche — deux volcans, deux comportements</span>
+          <span class="tl-toggle">▼</span>
+        </div>
+        <div class="tl-body open">
+          <div style="background:#FFF8F0;border-radius:10px;padding:10px 13px;margin-bottom:10px;font-size:0.82rem;line-height:1.72;color:#4A3020;border-left:3px solid #D84020;">
+            <strong>Question-problème :</strong> « Ces deux volcans se comportent-ils de la même façon ? Pourquoi l'un est-il plus dangereux que l'autre ? »
+          </div>
+          <div class="tl-grid">
+            <div class="tl-col" style="background:#FFF0EA;"><div class="tl-col-title" style="color:#7F1D1D;">🍎 Enseignant</div><ul><li>Projeter 2 photos côte à côte (Piton de la Fournaise / Vésuve)</li><li>Poser la question-problème</li><li>Recueillir les représentations sur ardoise</li></ul></div>
+            <div class="tl-col" style="background:#E4F8F2;"><div class="tl-col-title" style="color:#085041;">🎒 Élèves</div><ul><li>Observer en silence 30 s</li><li>Écrire 1 mot descriptif sur ardoise</li><li>Lever l'ardoise au signal</li></ul></div>
+            <div class="tl-col" style="background:#EBF4FF;"><div class="tl-col-title" style="color:#0C447C;">📦 Matériel</div><ul><li>Diaporama (2 photos)</li><li>Ardoise individuelle</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="tl-head" onclick="tog(this)">
+          <span class="tl-time" style="background:#1A6EC8">5–10 min</span>
+          <span class="tl-title">🔍 Rappel — structure de la Terre &amp; vocabulaire</span>
+          <span class="tl-toggle">▼</span>
+        </div>
+        <div class="tl-body">
+          <div class="tl-grid">
+            <div class="tl-col" style="background:#FFF0EA;"><div class="tl-col-title" style="color:#7F1D1D;">🍎 Enseignant</div><ul><li>Projeter le schéma muet du volcan</li><li>Questions orales : « Qu'y a-t-il sous nos pieds ? »</li><li>Introduire : magma, lave, cratère, cheminée</li></ul></div>
+            <div class="tl-col" style="background:#E4F8F2;"><div class="tl-col-title" style="color:#085041;">🎒 Élèves</div><ul><li>Réactiver la structure de la Terre</li><li>Répondre oralement</li><li>Copier les 4 mots clés sur ardoise</li></ul></div>
+            <div class="tl-col" style="background:#EBF4FF;"><div class="tl-col-title" style="color:#0C447C;">📦 Matériel</div><ul><li>Schéma muet projeté</li><li>Ardoise</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="tl-head" onclick="tog(this)">
+          <span class="tl-time" style="background:#0E8A6A">10–25 min</span>
+          <span class="tl-title">🗂 Activité de groupe — tri de documents (4 groupes)</span>
+          <span class="tl-toggle">▼</span>
+        </div>
+        <div class="tl-body">
+          <div style="background:#E4F8F2;border-radius:10px;padding:10px 13px;margin-bottom:10px;font-size:0.82rem;line-height:1.72;color:#085041;border-left:3px solid #0E8A6A;">
+            <strong>Consigne :</strong> « Dans l'enveloppe, vous avez 6 documents sur 2 volcans. Classez-les en 2 colonnes et trouvez au moins 3 différences. »
+          </div>
+          <div class="tl-grid">
+            <div class="tl-col" style="background:#FFF0EA;"><div class="tl-col-title" style="color:#7F1D1D;">🍎 Enseignant</div><ul><li>Distribuer les 4 enveloppes</li><li>Circuler et relancer : « Qu'est-ce qui le rend dangereux ? »</li><li>Aider sans donner la réponse</li></ul></div>
+            <div class="tl-col" style="background:#E4F8F2;"><div class="tl-col-title" style="color:#085041;">🎒 Élèves</div><ul><li>Lire les 6 documents</li><li>Trier et coller sur fiche A3</li><li>Formuler 3 différences à l'oral</li></ul></div>
+            <div class="tl-col" style="background:#EBF4FF;"><div class="tl-col-title" style="color:#0C447C;">📦 Matériel</div><ul><li>Enveloppes × 4</li><li>Fiche de tri A3</li><li>Colle, ciseaux</li></ul></div>
+          </div>
+          <div style="margin-top:10px;padding:9px 12px;background:#FFFBEB;border-radius:9px;font-size:0.79rem;color:#854F0B;">
+            <strong>Différenciation —</strong> En difficulté : 2 docs pré-classés + liste de mots clés &nbsp;|&nbsp; Avancés : classer les dangers du moins grave au plus grave
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="tl-head" onclick="tog(this)">
+          <span class="tl-time" style="background:#B45309">25–35 min</span>
+          <span class="tl-title">💬 Mise en commun — tableau comparatif collectif</span>
+          <span class="tl-toggle">▼</span>
+        </div>
+        <div class="tl-body">
+          <div class="tl-grid">
+            <div class="tl-col" style="background:#FFF0EA;"><div class="tl-col-title" style="color:#7F1D1D;">🍎 Enseignant</div><ul><li>1 rapporteur par groupe</li><li>Compléter le tableau comparatif au TNI</li><li>Institutionnaliser : effusif / explosif</li><li>Lister les 4 dangers</li></ul></div>
+            <div class="tl-col" style="background:#E4F8F2;"><div class="tl-col-title" style="color:#085041;">🎒 Élèves</div><ul><li>Présenter les résultats</li><li>Écouter et corriger</li><li>Compléter la fiche de groupe</li></ul></div>
+            <div class="tl-col" style="background:#EBF4FF;"><div class="tl-col-title" style="color:#0C447C;">📦 Matériel</div><ul><li>TNI — tableau comparatif</li><li>Fiche de groupe</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-card">
+        <div class="tl-head" onclick="tog(this)">
+          <span class="tl-time" style="background:#6D28D9">35–42 min</span>
+          <span class="tl-title">📝 Trace écrite — copie structurée</span>
+          <span class="tl-toggle">▼</span>
+        </div>
+        <div class="tl-body">
+          <div class="tl-grid">
+            <div class="tl-col" style="background:#FFF0EA;"><div class="tl-col-title" style="color:#7F1D1D;">🍎 Enseignant</div><ul><li>Projeter la trace écrite</li><li>Dicter / expliquer les mots clés</li><li>Questionner 2 élèves sur le sens</li></ul></div>
+            <div class="tl-col" style="background:#E4F8F2;"><div class="tl-col-title" style="color:#085041;">🎒 Élèves</div><ul><li>Copier dans le cahier de sciences</li><li>Souligner en rouge les mots nouveaux</li><li>Version à trous pour élèves DYS</li></ul></div>
+            <div class="tl-col" style="background:#EBF4FF;"><div class="tl-col-title" style="color:#0C447C;">📦 Matériel</div><ul><li>Cahier de sciences</li><li>Trace imprimée (DYS)</li><li>Crayons de couleur</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item" style="margin-bottom:0">
+      <div class="tl-card">
+        <div class="tl-head" onclick="tog(this)">
+          <span class="tl-time" style="background:#166534">42–45 min</span>
+          <span class="tl-title">✅ Évaluation formative — quiz ardoise</span>
+          <span class="tl-toggle">▼</span>
+        </div>
+        <div class="tl-body">
+          <div style="background:#F0FDF4;border-radius:10px;padding:10px 13px;margin-bottom:10px;font-size:0.82rem;line-height:1.75;color:#14532D;border-left:3px solid #166534;">
+            <strong>3 questions flash :</strong> (1) Comment s'appelle le magma en surface ? (2) Cite une différence effusif/explosif. (3) Nomme un danger lié aux éruptions.
+          </div>
+          <div class="tl-grid">
+            <div class="tl-col" style="background:#FFF0EA;"><div class="tl-col-title" style="color:#7F1D1D;">🍎 Enseignant</div><ul><li>Projeter les 3 questions</li><li>Observer les ardoises</li><li>Identifier les besoins pour la suite</li></ul></div>
+            <div class="tl-col" style="background:#E4F8F2;"><div class="tl-col-title" style="color:#085041;">🎒 Élèves</div><ul><li>Répondre sur ardoise</li><li>Lever au signal de l'enseignant</li><li>Auto-corriger en vert/rouge</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ANATOMIE ══ -->
+<div id="tab-volcan" class="panel">
+  <p style="font-size:0.8rem;color:var(--muted);margin-bottom:13px;">Clique sur une partie du schéma pour l'explorer</p>
+  <div class="volcan-wrap">
+    <div style="flex:0 0 auto;">
+      <svg viewBox="0 0 270 295" width="255" height="280" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="245" width="270" height="50" fill="#5C3A10"/>
+        <rect x="0" y="266" width="270" height="29" fill="#3D2408"/>
+        <ellipse cx="135" cy="273" rx="70" ry="23" fill="#E8A020" stroke="#C07010" stroke-width="2" onclick="showL('magma')" style="cursor:pointer"/>
+        <text x="135" y="277" text-anchor="middle" font-size="9.5" fill="#3a2000" font-family="Nunito,sans-serif" font-weight="700">Chambre magmatique</text>
+        <polygon points="117,247 153,247 142,158 128,158" fill="#E05050" onclick="showL('conduit')" style="cursor:pointer"/>
+        <polygon points="25,247 245,247 182,89 88,89" fill="#8B6540"/>
+        <polygon points="88,89 182,89 167,50 103,50" fill="#5C3A10"/>
+        <path d="M103,50 Q68,70 30,128 Q14,158 22,188" stroke="#E8A020" stroke-width="6" fill="none" stroke-linecap="round" onclick="showL('lave')" style="cursor:pointer"/>
+        <path d="M167,50 Q204,76 228,138 Q242,166 234,196" stroke="#E05050" stroke-width="5" fill="none" stroke-linecap="round" onclick="showL('lave')" style="cursor:pointer"/>
+        <ellipse cx="135" cy="50" rx="25" ry="9" fill="#2C1A08" stroke="#8B6540" stroke-width="1.5" onclick="showL('cratere')" style="cursor:pointer"/>
+        <text x="135" y="55" text-anchor="middle" font-size="10" fill="#E8D5C0" font-family="Nunito,sans-serif" font-weight="700">Cratère</text>
+        <ellipse cx="127" cy="32" rx="9" ry="7" fill="#888" opacity="0.5"/>
+        <ellipse cx="139" cy="21" rx="13" ry="8" fill="#999" opacity="0.4"/>
+        <ellipse cx="132" cy="10" rx="15" ry="8" fill="#aaa" opacity="0.35"/>
+        <text x="26" y="162" font-size="9.5" fill="#E8A020" font-family="Nunito,sans-serif" font-weight="700" onclick="showL('lave')" style="cursor:pointer">Lave</text>
+        <text x="156" y="206" font-size="9.5" fill="#E05050" font-family="Nunito,sans-serif" font-weight="700" onclick="showL('conduit')" style="cursor:pointer">Cheminée</text>
+        <path d="M170,118 Q196,109 218,114" stroke="#D45050" stroke-width="3.5" fill="none" stroke-linecap="round" onclick="showL('flanc')" style="cursor:pointer"/>
+        <text x="220" y="112" font-size="8.5" fill="#C04040" font-family="Nunito,sans-serif" font-weight="700" onclick="showL('flanc')" style="cursor:pointer">Bouche sec.</text>
+      </svg>
+    </div>
+    <div style="flex:1;min-width:185px;">
+      <div class="lbox" id="linfobox">
+        <h3 style="color:var(--lava)">Clique sur le schéma !</h3>
+        <p>Sélectionne une partie pour lire son explication.</p>
+      </div>
+      <div class="leg-btns">
+        <button class="leg-btn" onclick="showL('cratere')"><span class="ldot" style="background:#2C1A08"></span>Cratère</button>
+        <button class="leg-btn" onclick="showL('lave')"><span class="ldot" style="background:#E8A020"></span>Lave</button>
+        <button class="leg-btn" onclick="showL('conduit')"><span class="ldot" style="background:#E05050"></span>Cheminée</button>
+        <button class="leg-btn" onclick="showL('magma')"><span class="ldot" style="background:#E8A020"></span>Chambre</button>
+        <button class="leg-btn" onclick="showL('flanc')"><span class="ldot" style="background:#C04040"></span>Bouche sec.</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TYPES ══ -->
+<div id="tab-types" class="panel">
+  <p style="font-size:0.8rem;color:var(--muted);margin-bottom:13px;">Deux éruptions, deux comportements très différents</p>
+  <div class="comp-grid">
+    <div class="comp-card eff">
+      <span class="comp-ico">🌊</span>
+      <div class="comp-title">Volcan effusif</div>
+      <ul class="comp-list">
+        <li>Lave <strong>fluide</strong>, peu visqueuse</li>
+        <li>Éruption calme, pas d'explosion</li>
+        <li>Coulées de lave lentes et longues</li>
+        <li>Peu de cendres</li>
+        <li>Moins mortel, plus prévisible</li>
+      </ul>
+      <div style="margin-top:11px;padding:8px 10px;background:#fff;border-radius:8px;font-size:0.79rem;color:#085041;font-weight:700;">
+        Exemple : Piton de la Fournaise (La Réunion)
+      </div>
+    </div>
+    <div class="comp-card exp">
+      <span class="comp-ico">💥</span>
+      <div class="comp-title">Volcan explosif</div>
+      <ul class="comp-list">
+        <li>Lave <strong>visqueuse</strong>, épaisse</li>
+        <li>Explosions très violentes</li>
+        <li>Nuages de cendres + nuées ardentes</li>
+        <li>Projections de roches</li>
+        <li>Extrêmement dangereux</li>
+      </ul>
+      <div style="margin-top:11px;padding:8px 10px;background:#fff;border-radius:8px;font-size:0.79rem;color:#7F1D1D;font-weight:700;">
+        Exemple : Vésuve (Italie) — Pompéi 79 apr. J.-C.
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;background:#FFFBEB;border-color:#B45309;">
+    <div style="font-size:0.86rem;font-weight:800;color:#854F0B;margin-bottom:8px;">Pourquoi cette différence ?</div>
+    <p style="font-size:0.83rem;line-height:1.77;color:#4A3020;">La <strong>viscosité de la lave</strong> est la clé : dans un volcan effusif, la lave est fluide et les gaz s'en échappent facilement. Dans un volcan explosif, la lave épaisse <em>piège</em> les gaz — la pression monte jusqu'à l'explosion violente.</p>
+  </div>
+</div>
+
+<!-- ══ DANGERS ══ -->
+<div id="tab-dangers" class="panel">
+  <p style="font-size:0.8rem;color:var(--muted);margin-bottom:13px;">Clique sur un danger pour en savoir plus</p>
+  <div class="dang-grid">
+    <div class="dang-card" style="background:#FFF0EA;border-color:#D84020;" onclick="showDang(this,'coul')">
+      <span class="dang-ico">🌋</span>
+      <div class="dang-name" style="color:#7F1D1D;">Coulées de lave</div>
+      <div class="dang-desc">Brûlent tout sur leur passage</div>
+    </div>
+    <div class="dang-card" style="background:#FFF5F0;border-color:#C84020;" onclick="showDang(this,'nuee')">
+      <span class="dang-ico">☁️</span>
+      <div class="dang-name" style="color:#7F1D1D;">Nuées ardentes</div>
+      <div class="dang-desc">Nuage brûlant à grande vitesse</div>
+    </div>
+    <div class="dang-card" style="background:#FFFBEB;border-color:#B45309;" onclick="showDang(this,'cend')">
+      <span class="dang-ico">🌫️</span>
+      <div class="dang-name" style="color:#854F0B;">Cendres &amp; gaz</div>
+      <div class="dang-desc">Polluent l'air, bloquent le soleil</div>
+    </div>
+    <div class="dang-card" style="background:#EBF4FF;border-color:#1A6EC8;" onclick="showDang(this,'tsu')">
+      <span class="dang-ico">🌊</span>
+      <div class="dang-name" style="color:#0C447C;">Tsunamis</div>
+      <div class="dang-desc">Éruptions sous-marines</div>
+    </div>
+  </div>
+  <div id="dang-info" class="card" style="margin-top:12px;min-height:62px;border-left:4px solid var(--lava);">
+    <p style="font-size:0.83rem;color:var(--muted);">Clique sur un danger pour afficher son explication.</p>
+  </div>
+  <div class="card" style="background:#F0FDF4;border-color:#166534;">
+    <div style="font-size:0.86rem;font-weight:800;color:#14532D;margin-bottom:7px;">Comment se protéger ?</div>
+    <p style="font-size:0.83rem;line-height:1.77;color:#166534;">Les volcanologues surveillent en permanence les volcans actifs (tremblements de terre, gaz, température du sol). En cas de risque, les populations sont <strong>évacuées</strong>. Des plans d'urgence (PPR) existent dans toutes les zones à risque volcanique.</p>
+  </div>
+</div>
+
+<!-- ══ TRACE ══ -->
+<div id="tab-trace" class="panel">
+  <div class="trace-card">
+    <div class="trace-title">Les volcans : éruptions et dangers</div>
+    <div class="trace-section">
+      <div class="trace-h">1. Qu'est-ce qu'un volcan ?</div>
+      <p class="trace-body">Un volcan est une ouverture dans la croûte terrestre par laquelle s'échappent du <span class="hl">magma</span> (roche fondue en profondeur), des gaz et des cendres. En surface, le magma s'appelle la <span class="hl">lave</span>. Les principales parties d'un volcan sont : le <strong>cratère</strong>, la <strong>cheminée volcanique</strong> et la <strong>chambre magmatique</strong>.</p>
+    </div>
+    <div class="trace-section">
+      <div class="trace-h">2. Deux types d'éruptions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:#E4F8F2;border-radius:10px;padding:12px;font-size:0.81rem;line-height:1.77;color:#085041;border-top:3px solid #0E8A6A;">
+          <strong>Volcan effusif</strong><br>Lave fluide · éruption calme · coulées lentes.<br><em>Ex. : Piton de la Fournaise (La Réunion)</em>
+        </div>
+        <div style="background:#FFF0EA;border-radius:10px;padding:12px;font-size:0.81rem;line-height:1.77;color:#7F1D1D;border-top:3px solid #D84020;">
+          <strong>Volcan explosif</strong><br>Lave visqueuse · explosions violentes · nuées ardentes.<br><em>Ex. : Vésuve (Italie)</em>
+        </div>
+      </div>
+    </div>
+    <div class="trace-section">
+      <div class="trace-h">3. Les principaux dangers</div>
+      <ul style="font-size:0.83rem;line-height:1.9;padding-left:18px;color:#2C1A08;">
+        <li><strong>Les coulées de lave</strong> brûlent tout sur leur passage.</li>
+        <li><strong>Les nuées ardentes</strong> sont des nuages brûlants qui dévalent les pentes à 700 km/h.</li>
+        <li><strong>Les cendres et les gaz</strong> polluent l'air et peuvent bloquer le soleil.</li>
+        <li><strong>Les tsunamis</strong> peuvent être déclenchés par une éruption sous-marine.</li>
+      </ul>
+    </div>
+    <div class="retenir">
+      <strong>À retenir :</strong> un volcan <strong>effusif</strong> (lave fluide) est moins dévastateur qu'un volcan <strong>explosif</strong> (lave visqueuse + explosions + nuées ardentes). La surveillance permanente des volcans permet de protéger les populations.
+    </div>
+  </div>
+</div>
+
+<!-- ══ ÉVALUATION ══ -->
+<div id="tab-eval" class="panel">
+  <div style="font-size:0.86rem;font-weight:800;margin-bottom:12px;color:var(--text);">Grille de niveaux de maîtrise</div>
+  <div class="eval-grid">
+    <div class="eval-card ec-tbm"><div style="font-size:1.6rem">🏆</div><div style="font-size:0.81rem;font-weight:800;margin:5px 0;">Dépassé (TBM)</div><div style="font-size:0.73rem;line-height:1.5;">Toutes compétences + vocabulaire précis spontané</div></div>
+    <div class="eval-card ec-s"><div style="font-size:1.6rem">✅</div><div style="font-size:0.81rem;font-weight:800;margin:5px 0;">Atteint (S)</div><div style="font-size:0.73rem;line-height:1.5;">Schéma correct, 3 volcans placés, mécanisme expliqué</div></div>
+    <div class="eval-card ec-pa"><div style="font-size:1.6rem">🔶</div><div style="font-size:0.81rem;font-weight:800;margin:5px 0;">Partiel (PA)</div><div style="font-size:0.73rem;line-height:1.5;">Schéma partiel, 1–2 volcans, mécanisme incomplet</div></div>
+    <div class="eval-card ec-na"><div style="font-size:1.6rem">❌</div><div style="font-size:0.81rem;font-weight:800;margin:5px 0;">Non atteint (NA)</div><div style="font-size:0.73rem;line-height:1.5;">Schéma lacunaire, confusion magma/lave</div></div>
+  </div>
+  <div style="font-size:0.86rem;font-weight:800;margin:14px 0 10px;color:var(--text);">5 questions d'évaluation sommative</div>
+  <div class="crit-item"><span style="font-size:1.1rem">1️⃣</span><div><div style="font-size:0.84rem;font-weight:700;color:var(--text)">Comment s'appelle la roche fondue qui se trouve sous la surface de la Terre ?</div><div style="font-size:0.77rem;color:var(--muted);margin-top:3px;line-height:1.5">Réponse : Le magma (appelé lave une fois en surface).</div></div></div>
+  <div class="crit-item"><span style="font-size:1.1rem">2️⃣</span><div><div style="font-size:0.84rem;font-weight:700;color:var(--text)">Cite deux parties d'un volcan et explique le rôle de chacune.</div><div style="font-size:0.77rem;color:var(--muted);margin-top:3px;line-height:1.5">Ex. : Cratère = ouverture par où sort la lave / Cheminée = canal qui amène le magma vers la surface.</div></div></div>
+  <div class="crit-item"><span style="font-size:1.1rem">3️⃣</span><div><div style="font-size:0.84rem;font-weight:700;color:var(--text)">Quelle est la principale différence entre un volcan effusif et un volcan explosif ?</div><div style="font-size:0.77rem;color:var(--muted);margin-top:3px;line-height:1.5">Effusif : lave fluide, éruption calme. Explosif : lave visqueuse, explosions violentes, nuées ardentes.</div></div></div>
+  <div class="crit-item"><span style="font-size:1.1rem">4️⃣</span><div><div style="font-size:0.84rem;font-weight:700;color:var(--text)">Pourquoi le Vésuve est-il plus dangereux que le Piton de la Fournaise ?</div><div style="font-size:0.77rem;color:var(--muted);margin-top:3px;line-height:1.5">Le Vésuve est explosif : nuées ardentes et cendres sur de grandes distances. Le Piton est effusif, ses coulées sont lentes et prévisibles.</div></div></div>
+  <div class="crit-item" style="margin-bottom:0"><span style="font-size:1.1rem">5️⃣</span><div><div style="font-size:0.84rem;font-weight:700;color:var(--text)">Cite deux dangers liés aux éruptions et explique pourquoi chacun est dangereux.</div><div style="font-size:0.77rem;color:var(--muted);margin-top:3px;line-height:1.5">Ex. : Coulées de lave → brûlent tout ; nuées ardentes → nuage brûlant à 700 km/h, impossible à fuir.</div></div></div>
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div id="tab-quiz" class="panel">
+  <div class="qbar-wrap"><div class="qbar" id="qbar" style="width:0%"></div></div>
+  <div id="quiz-body"></div>
+</div>
+
+</div>
+
+<script>
+const dotsEl=document.getElementById('dotsEl');
+for(let i=0;i<7;i++){const d=document.createElement('div');d.className='dot'+(i===0?' on':'');dotsEl.appendChild(d);}
+let di=0;setInterval(()=>{dotsEl.children[di].classList.remove('on');di=(di+1)%7;dotsEl.children[di].classList.add('on');},600);
+
+function go(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+  if(id==='quiz') renderQuiz();
+}
+
+function tog(head){
+  const body=head.nextElementSibling;
+  const arrow=head.querySelector('.tl-toggle');
+  const open=body.classList.toggle('open');
+  arrow.style.transform=open?'rotate(180deg)':'';
+}
+
+const layers={
+  cratere:{title:'Cratère',color:'#2C1A08',text:"Le cratère est l'ouverture au sommet du volcan par laquelle sortent la lave, les gaz et les cendres. Il peut mesurer de quelques mètres à plusieurs kilomètres de diamètre."},
+  lave:{title:'La lave',color:'#E8501A',text:"La lave, c'est le magma sorti en surface. À plus de 700 °C, elle peut couler sur des dizaines de kilomètres avant de refroidir et de former des roches volcaniques (basalte, obsidienne)."},
+  conduit:{title:'La cheminée volcanique',color:'#C04040',text:"La cheminée est le canal par lequel le magma remonte de la chambre magmatique jusqu'au cratère. La pression des gaz pousse le magma vers le haut, comme dans une bouteille de soda secouée."},
+  magma:{title:'La chambre magmatique',color:'#C07010',text:"Située à plusieurs km de profondeur, c'est un immense réservoir de roche fondue et de gaz. Quand la pression y est trop forte, le magma remonte vers le cratère."},
+  flanc:{title:'La bouche secondaire',color:'#A03030',text:"Parfois, le magma trouve des fissures sur les flancs du volcan et s'échappe par des bouches secondaires, créant des coulées latérales en dehors du cratère principal."},
+};
+function showL(id){
+  const l=layers[id];
+  document.getElementById('linfobox').innerHTML='<h3 style="color:'+l.color+'">'+l.title+'</h3><p>'+l.text+'</p>';
+}
+
+const dangs={
+  coul:{title:'Coulées de lave',text:"La lave en fusion brûle et détruit tout ce qu'elle rencontre. Dans un volcan effusif, les coulées avancent lentement (quelques km/h) et laissent le temps d'évacuer. Dans un explosif, elles peuvent être bien plus rapides.",color:'#7F1D1D'},
+  nuee:{title:'Nuées ardentes',text:"C'est le danger le plus meurtrier. Un nuage de cendres brûlantes et de gaz dévale les pentes à plus de 700 km/h à 800 °C. La nuée ardente a détruit Pompéi en 79 apr. J.-C. en quelques minutes.",color:'#7F1D1D'},
+  cend:{title:'Cendres et gaz toxiques',text:"Les cendres volcaniques peuvent couvrir des milliers de km², s'infiltrer dans les poumons et polluer les récoltes. Les gaz (dioxyde de soufre) forment des pluies acides. En 2010, l'Eyjafjallajökull a bloqué tout le trafic aérien européen.",color:'#854F0B'},
+  tsu:{title:'Tsunamis volcaniques',text:"Une éruption sous-marine ou l'effondrement d'un flanc volcanique dans la mer peut provoquer un tsunami. Le Krakatoa (1883) a généré des vagues de 30 m qui ont tué plus de 36 000 personnes.",color:'#0C447C'},
+};
+function showDang(card,id){
+  const d=dangs[id];
+  document.getElementById('dang-info').innerHTML='<div style="font-size:0.87rem;font-weight:800;color:'+d.color+';margin-bottom:7px">'+d.title+'</div><p style="font-size:0.82rem;line-height:1.73;color:#2C1A08">'+d.text+'</p>';
+}
+
+const questions=[
+  {q:"Comment appelle-t-on la roche fondue sous la surface de la Terre ?",opts:["La lave","Le magma","Le basalte","Le granite"],ans:1,exp:"Sous la Terre, c'est le <strong>magma</strong>. Une fois sorti en surface, il s'appelle la <strong>lave</strong>."},
+  {q:"Par quelle partie d'un volcan sort la lave lors d'une éruption ?",opts:["La cheminée","La chambre magmatique","Le cratère","Le flanc"],ans:2,exp:"Le <strong>cratère</strong> est l'ouverture au sommet du volcan — la sortie principale de la lave."},
+  {q:"Qu'est-ce qui différencie la lave effusive de la lave explosive ?",opts:["Sa couleur","Sa température","Sa viscosité (fluidité)","Son odeur"],ans:2,exp:"C'est la <strong>viscosité</strong> : lave fluide = volcan effusif, lave épaisse/visqueuse = volcan explosif."},
+  {q:"Quelle est la ville antique ensevelie par le Vésuve en 79 apr. J.-C. ?",opts:["Rome","Athènes","Pompéi","Carthage"],ans:2,exp:"<strong>Pompéi</strong> a été ensevelie en quelques minutes par une nuée ardente et des cendres du Vésuve."},
+  {q:"Quel est le danger volcanique le plus meurtrier ?",opts:["Les coulées de lave","Les nuées ardentes","Les tsunamis","Les cendres"],ans:1,exp:"Les <strong>nuées ardentes</strong> sont les plus meurtrières : nuage brûlant à 800 °C et 700 km/h, impossible à fuir."},
+  {q:"Que font les volcanologues pour protéger les populations ?",opts:["Ils éteignent les volcans","Ils surveillent les volcans en permanence","Ils construisent des barrages","Ils font des prières"],ans:1,exp:"Les volcanologues <strong>surveillent</strong> (tremblements, gaz, température) et déclenchent les évacuations à temps."},
+  {q:"Quel volcan français est un exemple de volcan effusif très actif ?",opts:["Vésuve","Etna","Piton de la Fournaise","Eyjafjallajökull"],ans:2,exp:"Le <strong>Piton de la Fournaise</strong> (île de La Réunion) est un volcan effusif très actif, propriété française."},
+];
+
+let cur=0,score=0,answered=false;
+function renderQuiz(){
+  if(cur>=questions.length){
+    const pct=Math.round(score/questions.length*100);
+    const stars=pct>=86?'⭐⭐⭐':pct>=57?'⭐⭐':'⭐';
+    const msg=pct>=86?'Excellent ! Tu maîtrises le sujet !':pct>=57?'Bien joué, continue !':'Relis la trace écrite et réessaie !';
+    document.getElementById('quiz-body').innerHTML='<div class="final"><div class="final-num">'+score+'/'+questions.length+'</div><div class="final-stars">'+stars+'</div><div class="final-msg">'+msg+'</div><button class="rbtn" onclick="resetQ()">🔄 Recommencer</button></div>';
+    document.getElementById('qbar').style.width='100%';
+    return;
+  }
+  const q=questions[cur];
+  document.getElementById('qbar').style.width=Math.round(cur/questions.length*100)+'%';
+  document.getElementById('quiz-body').innerHTML='<div class="qcard"><div style="font-size:0.74rem;font-weight:700;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:7px;"><span style="background:var(--lava);color:#fff;padding:3px 11px;border-radius:99px;font-size:0.71rem;">Q'+(cur+1)+'/'+questions.length+'</span></div><div class="qq">'+q.q+'</div><div class="opts">'+q.opts.map((o,i)=>'<button class="opt" onclick="answer('+i+')">'+o+'</button>').join('')+'</div><div class="fb" id="qfb"></div><div class="qnav"><span class="qsc">Score : '+score+' ✅</span><button class="nbtn" id="nbtn" style="display:none" onclick="nextQ()">Question suivante →</button></div></div>';
+  answered=false;
+}
+function answer(i){
+  if(answered)return;
+  answered=true;
+  const q=questions[cur];
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('qfb');
+  if(i===q.ans){score++;document.querySelectorAll('.opt')[i].classList.add('correct');fb.className='fb show good';fb.innerHTML='✅ '+q.exp;}
+  else{document.querySelectorAll('.opt')[i].classList.add('wrong');document.querySelectorAll('.opt')[q.ans].classList.add('correct');fb.className='fb show bad';fb.innerHTML='❌ '+q.exp;}
+  document.getElementById('nbtn').style.display='inline-block';
+}
+function nextQ(){cur++;renderQuiz();}
+function resetQ(){cur=0;score=0;renderQuiz();}
+</script>
+</body>
+</html>
